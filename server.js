@@ -5,6 +5,7 @@ const morgan = require("morgan");
 var rfs = require("rotating-file-stream"); // version 2.x
 const logger = require("./middleware/logger");
 const connectDB = require("./config/db");
+const colors = require("colors");
 
 // Router оруулж ирэх
 const categoriesRoutes = require("./routes/categories");
@@ -29,12 +30,12 @@ app.use("/api/v1/categories", categoriesRoutes);
 
 const server = app.listen(
   process.env.PORT,
-  console.log(`Express server ${process.env.PORT} портон дээр аслаа.`)
+  console.log(`Express server ${process.env.PORT} портон дээр аслаа.`.rainbow)
 );
 
 // App даяар цацагдсан try catch хийгээгүй promise-уудыг rejex-үүдийг барьж авч байна.
 process.on("unhandledRejection", (err, promise) => {
-  console.log(`Алдаа гарлаа.: ${err.message}`);
+  console.log(`Алдаа гарлаа.: ${err.message}`.underline.red.bold);
   server.close(() => {
     // Процессыг зогсоож байна. Алдааны кодыг 1 гээд дамжуулж байна.
     process.exit(1);
