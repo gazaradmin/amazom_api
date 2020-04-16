@@ -22,6 +22,8 @@ var accessLogStream = rfs.createStream("access.log", {
 });
 
 const app = express();
+// Body parser хийнэ. request-ээр орж ирж байгаа утгуудыг хүлээж авдаг.
+app.use(express.json());
 
 app.use(logger);
 // setup the logger
