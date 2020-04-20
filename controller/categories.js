@@ -9,10 +9,7 @@ exports.getCategories = async (req, res, next) => {
       data: categories,
     });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: err,
-    });
+    next(err);
   }
 };
 
@@ -32,10 +29,7 @@ exports.getCategory = async (req, res, next) => {
       data: category,
     });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: err,
-    });
+    next(err);
   }
 };
 
@@ -51,11 +45,7 @@ exports.createCategory = async (req, res, next) => {
       data: category,
     });
   } catch (err) {
-    console.log("exports.createCategory -> error", err);
-    res.status(400).json({
-      success: false,
-      error: err,
-    });
+    next(err);
   }
 };
 
@@ -78,10 +68,7 @@ exports.updateCategory = async (req, res, next) => {
       data: category,
     });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: err,
-    });
+    next(err);
   }
 };
 
@@ -100,9 +87,6 @@ exports.deleteCategory = async (req, res, next) => {
       data: category,
     });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: err,
-    });
+    next(err);
   }
 };

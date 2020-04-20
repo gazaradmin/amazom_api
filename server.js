@@ -6,12 +6,13 @@ var rfs = require("rotating-file-stream"); // version 2.x
 const logger = require("./middleware/logger");
 const connectDB = require("./config/db");
 const colors = require("colors");
-
+const errorHandler = require("./middleware/error");
 // Router оруулж ирэх
 const categoriesRoutes = require("./routes/categories");
-
 // Апп-ын тохиргоог process.env рүү ачааллах
 dotenv.config({ path: "./config/config.env" });
+
+const app = express();
 
 connectDB();
 
@@ -21,7 +22,6 @@ var accessLogStream = rfs.createStream("access.log", {
   path: path.join(__dirname, "log"),
 });
 
-const app = express();
 // Body parser хийнэ. request-ээр орж ирж байгаа утгуудыг хүлээж авдаг.
 app.use(express.json());
 
@@ -29,6 +29,7 @@ app.use(logger);
 // setup the logger
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use("/api/v1/categories", categoriesRoutes);
+app.use(errorHandler);
 
 const server = app.listen(
   process.env.PORT,
