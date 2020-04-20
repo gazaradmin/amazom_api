@@ -21,17 +21,16 @@ exports.getCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
 
-    if (category) {
-      res.status(200).json({
-        success: true,
-        data: category,
-      });
-    } else {
-      res.status(400).json({
+    if (!category) {
+      return res.status(400).json({
         success: false,
         error: req.params.id + " id -тай категори байхгүй. ",
       });
     }
+    res.status(200).json({
+      success: true,
+      data: category,
+    });
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -60,16 +59,50 @@ exports.createCategory = async (req, res, next) => {
   }
 };
 
-exports.updateCategory = (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    data: `${req.params.id} Шинэ категори өөрчлөх`,
-  });
+exports.updateCategory = async (req, res, next) => {
+  try {
+    // new:true гэвэл хэрхэн яаж update хийгдсэн бэ гэдэг нь харагдана. runValidators нь Model дээр бичсэн шалгалтуудыг шалгаарай гэж хэлж байна.
+    const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!category) {
+      return res.status(400).json({
+        success: false,
+        error: req.params.id + " id -тай категори байхгүй. ",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: category,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      error: err,
+    });
+  }
 };
 
-exports.deleteCategory = (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    data: `${req.params.id} -ID-тай категорийг устгалаа.`,
-  });
+exports.deleteCategory = async (req, res, next) => {
+  try {
+    const category = await Category.findByIdAndDelete(req.params.id);
+
+    if (!category) {
+      return res.status(400).json({
+        success: false,
+        error: req.params.id + " id -тай категори байхгүй. ",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: category,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      error: err,
+    });
+  }
 };
