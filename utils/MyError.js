@@ -2,7 +2,6 @@
 class MyError extends Error {
   constructor(message, statusCode) {
     super(message);
-    console.log("MyError.js");
     this.statusCode = statusCode;
   }
 }
