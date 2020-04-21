@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const MyError = require("../utils/MyError");
 
 exports.getCategories = async (req, res, next) => {
   // find() function нь утга дамжуулахгүй бол бүх утгыг өгнө.
@@ -19,16 +20,15 @@ exports.getCategory = async (req, res, next) => {
     const category = await Category.findById(req.params.id);
 
     if (!category) {
-      return res.status(400).json({
-        success: false,
-        error: req.params.id + " id -тай категори байхгүй. ",
-      });
+      // Өөрийн гэсэн алдаа цацаж байна.
+      throw new MyError(req.params.id + " id -тай категори байхгүй. ", 400);
     }
     res.status(200).json({
       success: true,
       data: category,
     });
   } catch (err) {
+    console.log("categories.js");
     next(err);
   }
 };
@@ -58,10 +58,7 @@ exports.updateCategory = async (req, res, next) => {
     });
 
     if (!category) {
-      return res.status(400).json({
-        success: false,
-        error: req.params.id + " id -тай категори байхгүй. ",
-      });
+      throw new MyError(req.params.id + " id -тай категори байхгүй. ", 400);
     }
     res.status(200).json({
       success: true,
@@ -77,10 +74,7 @@ exports.deleteCategory = async (req, res, next) => {
     const category = await Category.findByIdAndDelete(req.params.id);
 
     if (!category) {
-      return res.status(400).json({
-        success: false,
-        error: req.params.id + " id -тай категори байхгүй. ",
-      });
+      throw new MyError(req.params.id + " id -тай категори байхгүй. ", 400);
     }
     res.status(200).json({
       success: true,
