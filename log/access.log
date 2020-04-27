@@ -59,3 +59,4 @@
 ::1 - - [27/Apr/2020:14:33:03 +0000] "GET /api/v1/categories HTTP/1.1" 200 713 "-" "PostmanRuntime/7.24.1"
 ::1 - - [27/Apr/2020:14:34:58 +0000] "GET /api/v1/categories HTTP/1.1" 200 26 "-" "PostmanRuntime/7.24.1"
 ::1 - - [27/Apr/2020:14:35:19 +0000] "GET /api/v1/categories HTTP/1.1" 200 713 "-" "PostmanRuntime/7.24.1"
+::1 - - [27/Apr/2020:15:29:38 +0000] "POST /api/v1/categories HTTP/1.1" 400 374 "-" "PostmanRuntime/7.24.1"
