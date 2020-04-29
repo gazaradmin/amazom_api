@@ -3,8 +3,9 @@ const MyError = require("../utils/MyError");
 const asyncHandler = require("../middleware/asyncHandler");
 
 exports.getCategories = asyncHandler(async (req, res, next) => {
+  console.log(req.query);
   // find() function нь утга дамжуулахгүй бол бүх утгыг өгнө.
-  const categories = await Category.find();
+  const categories = await Category.find(req.query);
 
   res.status(200).json({
     success: true,
