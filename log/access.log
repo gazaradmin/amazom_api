@@ -108,3 +108,4 @@
 ::1 - - [04/May/2020:14:38:23 +0000] "GET /api/v1/categories?select=name&page=2&limit=3 HTTP/1.1" 200 165 "-" "PostmanRuntime/7.24.1"
 ::1 - - [04/May/2020:14:43:24 +0000] "GET /api/v1/categories?select=name&page=2&limit=3 HTTP/1.1" 200 175 "-" "PostmanRuntime/7.24.1"
 ::1 - - [04/May/2020:14:43:37 +0000] "GET /api/v1/categories?select=name HTTP/1.1" 200 354 "-" "PostmanRuntime/7.24.1"
+::1 - - [06/May/2020:14:12:13 +0000] "GET /api/v1/categories?select=name HTTP/1.1" 200 354 "-" "PostmanRuntime/7.24.1"

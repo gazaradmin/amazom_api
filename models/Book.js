@@ -1,0 +1,58 @@
+const mongoose = require("mongoose");
+
+const { transliterate, slugify } = require("transliteration");
+
+const BookSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, "Номны нэрийг оруулна уу"],
+    unique: true,
+    //Хоосон зай enter-ыг автоматаар цэвэрлэнэ.
+    trim: true,
+    maxlength: [250, "Номны нэрний урт дээд тал нь 250 тэмдэгт байх ёстой."],
+  },
+  photo: {
+    type: String,
+    //   Хоосон хүсэлт ирэх юм бол DEFAULT -оор өгнө.
+    default: "no-photo.jpg",
+  },
+  author: {
+    type: String,
+    required: [true, "Номны нэрийг оруулна уу"],
+    trim: true,
+    maxlength: [50, "Зохиогчийн нэрний урт дээд тал нь 50 тэмдэгт байх ёстой"],
+  },
+  rating: {
+    type: Number,
+    min: [1, "Рэйтинг хамгийн багадаа 1 байх ёстой."],
+    max: [10, "Хамгийн ихдээ 10 байх ёстой"],
+  },
+  price: {
+    type: Number,
+    min: [500, "Номны үнэ хамгийн багадаа 500 төгрөг байх ёстой."],
+  },
+  balance: Number,
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  content: {
+    type: String,
+    required: [true, "Номны тайлбарыг оруулна уу"],
+    trim: true,
+    maxlength: [5000, "Номны  нэрний урт дээд тал нь 5000 тэмдэгт байх ёстой"],
+  },
+  bestseller: {
+    type: Boolean,
+    default: false,
+  },
+  available: [String],
+
+  category: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Category",
+    required: true,
+  },
+});
+
+module.exports = mongoose.model("Book", BookSchema);
