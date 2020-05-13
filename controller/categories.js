@@ -1,8 +1,8 @@
 const Category = require("../models/Category");
 const MyError = require("../utils/MyError");
-const asyncHandler = require("express-async-handler");
+// const asyncHandler = require("express-async-handler");
 
-// const asyncHandler = require("../middleware/asyncHandler");
+const asyncHandler = require("../middleware/asyncHandler");
 
 exports.getCategories = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;

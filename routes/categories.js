@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   getCategories,
   getCategory,
@@ -7,6 +8,13 @@ const {
   updateCategory,
   deleteCategory,
 } = require("../controller/categories");
+
+// const { getBooks } = require("../controller/books");
+// /api/v1/categories
+// router.route("/:categoryId/books").get(getBooks);
+
+const booksRouter = require("./books");
+router.use("/:categoryId/books", booksRouter);
 
 // /api/v1/categories
 router.route("/").get(getCategories).post(createCategory);
