@@ -42,12 +42,20 @@ exports.getCategories = asyncHandler(async (req, res, next) => {
 exports.getCategory = asyncHandler(async (req, res, next) => {
   // findById(req.params.id) function нь утга дамжуулахгүй бол бүх утгыг өгнө.
   // books-ын virtual talbariin ner
-  const category = await Category.findById(req.params.id).populate("books");
+  // const category = await Category.findById(req.params.id).populate("books");
+  const category = await Category.findById(req.params.id);
 
   if (!category) {
     // Өөрийн гэсэн алдаа цацаж байна.
     throw new MyError(req.params.id + " id -тай категори байхгүй!. ", 400);
   }
+
+  // category.name += "-";
+  // category.save(function (err) {
+  //   if (err) console.log("error: ", err);
+  //   console.log("saved...");
+  // });
+
   res.status(200).json({
     success: true,
     data: category,
@@ -83,11 +91,14 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
 });
 
 exports.deleteCategory = asyncHandler(async (req, res, next) => {
-  const category = await Category.findByIdAndDelete(req.params.id);
+  const category = await Category.findById(req.params.id);
 
   if (!category) {
     throw new MyError(req.params.id + " id -тай категори байхгүй. ", 400);
   }
+
+  category.remove();
+
   res.status(200).json({
     success: true,
     data: category,

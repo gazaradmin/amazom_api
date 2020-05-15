@@ -59,4 +59,9 @@ CategorySchema.pre("save", function (next) {
   next();
 });
 
+CategorySchema.pre("remove", async function (next) {
+  await this.model("Book").deleteMany({ category: this._id });
+  next();
+});
+
 module.exports = mongoose.model("Category", CategorySchema);

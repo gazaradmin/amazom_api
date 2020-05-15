@@ -156,3 +156,8 @@
 ::1 - - [15/May/2020:15:13:52 +0000] "GET /api/v1/categories/5e987722edc2407e0fb7604d HTTP/1.1" 200 327 "-" "PostmanRuntime/7.24.1"
 ::1 - - [15/May/2020:15:19:24 +0000] "GET /api/v1/categories/5e987722edc2407e0fb7604d HTTP/1.1" 200 327 "-" "PostmanRuntime/7.24.1"
 ::1 - - [15/May/2020:15:20:34 +0000] "GET /api/v1/categories/5e987722edc2407e0fb7604d HTTP/1.1" 200 7501 "-" "PostmanRuntime/7.24.1"
+::1 - - [15/May/2020:15:28:44 +0000] "GET /api/v1/categories/5e987722edc2407e0fb7604d HTTP/1.1" 200 7501 "-" "PostmanRuntime/7.24.1"
+::1 - - [15/May/2020:15:29:14 +0000] "GET /api/v1/categories/5e987722edc2407e0fb7604d HTTP/1.1" 200 359 "-" "PostmanRuntime/7.24.1"
+::1 - - [15/May/2020:15:43:52 +0000] "GET /api/v1/books HTTP/1.1" 200 31819 "-" "PostmanRuntime/7.24.1"
+::1 - - [15/May/2020:15:44:21 +0000] "DELETE /api/v1/categories/5e987722edc2407e0fb7604d HTTP/1.1" 200 359 "-" "PostmanRuntime/7.24.1"
+::1 - - [15/May/2020:15:44:30 +0000] "GET /api/v1/books HTTP/1.1" 200 24319 "-" "PostmanRuntime/7.24.1"
