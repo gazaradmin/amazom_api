@@ -42,8 +42,8 @@ exports.getCategories = asyncHandler(async (req, res, next) => {
 exports.getCategory = asyncHandler(async (req, res, next) => {
   // findById(req.params.id) function нь утга дамжуулахгүй бол бүх утгыг өгнө.
   // books-ын virtual talbariin ner
-  // const category = await Category.findById(req.params.id).populate("books");
-  const category = await Category.findById(req.params.id);
+  const category = await Category.findById(req.params.id).populate("books");
+  // const category = await Category.findById(req.params.id);
 
   if (!category) {
     // Өөрийн гэсэн алдаа цацаж байна.

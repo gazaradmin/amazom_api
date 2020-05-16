@@ -27,7 +27,7 @@ const books = JSON.parse(
 const importData = async () => {
   try {
     await Category.create(categories);
-    await Book.create(books);
+    // await Book.create(books);
     console.log("JSON imported ...".green.inverse);
   } catch (err) {
     console.log(err);

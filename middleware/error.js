@@ -2,6 +2,7 @@ const errorHandler = (err, req, res, next) => {
   console.log(err.stack.cyan.underline);
 
   const error = { ...err };
+  error.message = err.message;
 
   console.log(err);
 
