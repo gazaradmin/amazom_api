@@ -10,7 +10,8 @@ const {
 } = require("../controller/books");
 
 //  mergeParams: true => Нөгөө талаас ирсэн params-ыг хүлээж авах чадамжтай болно.
-const router = express.Router({ mergeParams: true });
+// const router = express.Router({ mergeParams: true });
+const router = express.Router();
 
 // /api/v1/books/
 router.route("/").get(getBooks).post(createBook);

@@ -5,20 +5,21 @@ const MyError = require("../utils/MyError");
 const asyncHandler = require("../middleware/asyncHandler");
 
 // api/v1/books
-// api/v1/categories/:catid/books
 exports.getBooks = asyncHandler(async (req, res, next) => {
-  let query;
+  const books = await Book.find().populate({
+    path: "category",
+    select: "name averagePrice",
+  });
+  res.status(200).json({
+    success: true,
+    count: books.length,
+    data: books,
+  });
+});
 
-  if (req.params.categoryId) {
-    query = Book.find({ category: req.params.categoryId });
-  } else {
-    query = Book.find().populate({
-      path: "category",
-      select: "name averagePrice",
-    });
-  }
-
-  const books = await query;
+// api/v1/categories/:catid/books
+exports.getCategoryBooks = asyncHandler(async (req, res, next) => {
+  const books = await Book.find({ category: req.params.categoryId });
   res.status(200).json({
     success: true,
     count: books.length,
