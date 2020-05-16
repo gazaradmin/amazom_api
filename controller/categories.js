@@ -50,12 +50,6 @@ exports.getCategory = asyncHandler(async (req, res, next) => {
     throw new MyError(req.params.id + " id -тай категори байхгүй!. ", 400);
   }
 
-  // category.name += "-";
-  // category.save(function (err) {
-  //   if (err) console.log("error: ", err);
-  //   console.log("saved...");
-  // });
-
   res.status(200).json({
     success: true,
     data: category,

@@ -1,4 +1,5 @@
 const Book = require("../models/Book");
+const path = require("path");
 const Category = require("../models/Category");
 const MyError = require("../utils/MyError");
 const asyncHandler = require("../middleware/asyncHandler");
@@ -32,13 +33,10 @@ exports.getBook = asyncHandler(async (req, res, next) => {
     throw new MyError(`${req.params.id} ID-тай ном байхгүй байна. `, 404);
   }
 
-  const avg = await Book.computeCategoryAveragePrice(book.category);
-
   res.status(200).json({
     success: true,
     count: book.length,
     data: book,
-    average: avg,
   });
 });
 
@@ -71,6 +69,44 @@ exports.updateBook = asyncHandler(async (req, res, next) => {
     success: true,
     count: book.length,
     data: book,
+  });
+});
+
+//PUT: api/v1/books/:id/photo
+exports.uploadBookPhoto = asyncHandler(async (req, res, next) => {
+  const book = await Book.findById(req.params.id, req.body);
+  if (!book) {
+    throw new MyError(`${req.params.id} ID-тэй ном байхгүй байна!`, 400);
+  }
+
+  // image upload
+  const file = req.files.file;
+
+  if (!file.mimetype.startsWith("image")) {
+    throw new MyError("Та зураг upload хийнэ үү", 400);
+  }
+
+  if (file.size > process.env.MAX_UPLOAD_FILE_SIZE) {
+    throw new MyError("Таны зурагны хэмжээ хэтэрсэн байна.", 400);
+  }
+  // path.parse(file.name).ext- file-ын нэрийг задлаад extension-ыг нь авна.
+  file.name = `photo_${req.params.id}${path.parse(file.name).ext}`;
+
+  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, (err) => {
+    if (err) {
+      throw new MyError(
+        "Файлыг хуулах явцад алдаа гарлаа. Алдаа: " + err.message,
+        400
+      );
+    }
+    // book-ын photo талбарт утга өгч хадгалж байна.
+    book.photo = file.name;
+    book.save();
+
+    res.status(200).json({
+      success: true,
+      data: file.name,
+    });
   });
 });
 

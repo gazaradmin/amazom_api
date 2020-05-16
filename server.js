@@ -12,7 +12,7 @@ const categoriesRoutes = require("./routes/categories");
 const booksRoutes = require("./routes/books");
 // Апп-ын тохиргоог process.env рүү ачааллах
 dotenv.config({ path: "./config/config.env" });
-
+const fileUpload = require("express-fileupload");
 const app = express();
 
 connectDB();
@@ -25,6 +25,9 @@ var accessLogStream = rfs.createStream("access.log", {
 
 // Body parser хийнэ. request-ээр орж ирж байгаа утгуудыг хүлээж авдаг.
 app.use(express.json());
+
+// file upload
+app.use(fileUpload());
 
 app.use(logger);
 // setup the logger
