@@ -1,35 +1,26 @@
 const Category = require("../models/Category");
 const MyError = require("../utils/MyError");
+const paginate = require("../utils/paginate");
 // const asyncHandler = require("express-async-handler");
 
 const asyncHandler = require("../middleware/asyncHandler");
 
 exports.getCategories = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
-
   const limit = parseInt(req.query.limit) || 100;
-
   const select = req.query.select;
-
   const sort = req.query.sort;
   // req.query.select-s select -g ustgaj bn
   console.log(req.query, sort, select);
   ["select", "sort", "page", "limit"].forEach((el) => delete req.query[el]);
-  // Pagenation
-  // category dotor niit hed baigaag ogno.
-  const total = await Category.countDocuments();
-  const pageCount = Math.ceil(total / limit);
-  const start = (page - 1) * limit + 1;
-  let end = start + limit - 1;
-  if (end > total) end = total;
-  const pagination = { total, pageCount, start, end, limit };
-  if (page < pageCount) pagination.netxPage = page + 1;
-  if (page > 1) pagination.prevPage = page - 1;
+
+  // Pagination
+  const pagination = await paginate(page, limit, Category);
 
   // find() function нь утга дамжуулахгүй бол бүх утгыг өгнө.
   const categories = await Category.find(req.query, select)
     .sort(sort)
-    .skip(start - 1)
+    .skip(pagination.start - 1)
     .limit(limit);
 
   res.status(200).json({
