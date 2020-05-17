@@ -131,13 +131,27 @@ exports.createBook = asyncHandler(async (req, res, next) => {
 exports.updateBook = asyncHandler(async (req, res, next) => {
   req.body.updateUser = req.userId;
 
-  const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const book = await Book.findByIdAndUpdate(req.params.id);
+
   if (!book) {
     throw new MyError(`${req.params.id} ID-тэй ном байхгүй байна!`, 400);
   }
+
+  if (book.createUser.toString() !== req.userId && req.userRole !== "admin") {
+    throw new MyError("Та зөвхөн өөрийнхөө номыг засварлах эрхтэй.", 403);
+  }
+
+  req.body.updateUser = req.userId;
+
+  for (let attr in req.body) {
+    book[attr] = req.body[attr];
+  }
+  book.save();
+  // book = await Book.findByIdAndUpdate(req.params.id, req.body, {
+  //   new: true,
+  //   runValidators: true,
+  // });
+
   res.status(200).json({
     success: true,
     count: book.length,
@@ -185,9 +199,15 @@ exports.uploadBookPhoto = asyncHandler(async (req, res, next) => {
 
 exports.deleteBook = asyncHandler(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
+
   if (!book) {
     throw new MyError(`${req.params.id} ID-тэй ном байхгүй байна!`, 400);
   }
+
+  if (book.createUser.toString() !== req.userId && req.userRole !== "admin") {
+    throw new MyError("Та зөвхөн өөрийнхөө номыг засварлах эрхтэй.", 403);
+  }
+
   book.remove();
   const user = await User.findById(req.userId);
 
