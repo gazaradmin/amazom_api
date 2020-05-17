@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -38,9 +39,16 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.pre("save", async function () {
+UserSchema.pre("save", async function (next) {
+  // нууц үг өөрчлөгдөөгүй бол дараачийн middleware руу явна
+  if (!this.isModified("password")) next();
+  // Password change
+  console.time("salt");
   const salt = await bcrypt.genSalt(12);
+  console.timeEnd("salt");
+  console.time("hash");
   this.password = await bcrypt.hash(this.password, salt);
+  console.timeEnd("hash");
 });
 
 UserSchema.methods.getJsonWebToken = function () {
@@ -56,6 +64,19 @@ UserSchema.methods.getJsonWebToken = function () {
 
 UserSchema.methods.checkPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+UserSchema.methods.generatePasswordChangeToken = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 module.exports = mongoose.model("User", UserSchema);

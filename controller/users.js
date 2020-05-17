@@ -102,6 +102,26 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
   });
 });
 
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  if (!req.body.email) {
+    throw new MyError("Та нууц үг сэргээх email хаягаа оруулна уу?", 400);
+  }
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    throw new MyError(req.body.email + " email -тэй  хэрэглэгч байхгүй. ", 400);
+  }
+  const resetToken = user.generatePasswordChangeToken();
+  // await user.save({ validateBeforeSave: false });
+  await user.save();
+
+  // send email
+
+  res.status(200).json({
+    success: true,
+    resetToken,
+  });
+});
+
 exports.deleteUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
