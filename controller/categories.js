@@ -7,7 +7,7 @@ const asyncHandler = require("../middleware/asyncHandler");
 
 exports.getCategories = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 100;
+  const limit = parseInt(req.query.limit) || 10;
   const select = req.query.select;
   const sort = req.query.sort;
   // req.query.select-s select -g ustgaj bn

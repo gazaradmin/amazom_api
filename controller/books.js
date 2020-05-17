@@ -2,28 +2,64 @@ const Book = require("../models/Book");
 const path = require("path");
 const Category = require("../models/Category");
 const MyError = require("../utils/MyError");
+const paginate = require("../utils/paginate");
 const asyncHandler = require("../middleware/asyncHandler");
 
 // api/v1/books
 exports.getBooks = asyncHandler(async (req, res, next) => {
-  const books = await Book.find().populate({
-    path: "category",
-    select: "name averagePrice",
-  });
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const select = req.query.select;
+  const sort = req.query.sort;
+  // req.query.select-s select -g ustgaj bn
+  console.log(req.query, sort, select);
+  ["select", "sort", "page", "limit"].forEach((el) => delete req.query[el]);
+
+  // Pagination
+  const pagination = await paginate(page, limit, Book);
+
+  const books = await Book.find(req.query, select)
+    .populate({
+      path: "category",
+      select: "name averagePrice",
+    })
+    .sort(sort)
+    .skip(pagination.start - 1)
+    .limit(limit);
   res.status(200).json({
     success: true,
     count: books.length,
     data: books,
+    pagination,
   });
 });
 
 // api/v1/categories/:catid/books
 exports.getCategoryBooks = asyncHandler(async (req, res, next) => {
-  const books = await Book.find({ category: req.params.categoryId });
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const select = req.query.select;
+  const sort = req.query.sort;
+  // req.query.select-s select -g ustgaj bn
+  console.log(req.query, sort, select);
+  ["select", "sort", "page", "limit"].forEach((el) => delete req.query[el]);
+
+  // Pagination
+  const pagination = await paginate(page, limit, Book);
+
+  // req.query, select
+  const books = await Book.find(
+    { ...req.query, category: req.params.categoryId },
+    select
+  )
+    .sort(sort)
+    .skip(pagination.start - 1)
+    .limit(limit);
   res.status(200).json({
     success: true,
     count: books.length,
     data: books,
+    pagination,
   });
 });
 
