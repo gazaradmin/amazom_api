@@ -12,7 +12,7 @@ exports.getBooks = asyncHandler(async (req, res, next) => {
   const select = req.query.select;
   const sort = req.query.sort;
   // req.query.select-s select -g ustgaj bn
-  console.log(req.query, sort, select);
+  // console.log(req.query, sort, select);
   ["select", "sort", "page", "limit"].forEach((el) => delete req.query[el]);
 
   // Pagination
