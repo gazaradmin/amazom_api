@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Хэрэглэгчийн имэйлийг оруулна уу"],
+    unique: [true, "Бүртгэлтэй мэйл хаяг байна."],
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       "Имэйл хаяг буруу байна.",

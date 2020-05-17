@@ -1,4 +1,5 @@
 const Book = require("../models/Book");
+const User = require("../models/User");
 const path = require("path");
 const Category = require("../models/Category");
 const MyError = require("../utils/MyError");
@@ -153,10 +154,13 @@ exports.deleteBook = asyncHandler(async (req, res, next) => {
     throw new MyError(`${req.params.id} ID-тэй ном байхгүй байна!`, 400);
   }
   book.remove();
+  const user = await User.findById(req.userId);
 
   res.status(200).json({
     success: true,
     count: book.length,
     data: book,
+    deleteUserID: req.userId,
+    whoDeleted: user,
   });
 });
