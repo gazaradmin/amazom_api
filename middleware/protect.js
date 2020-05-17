@@ -12,11 +12,22 @@ exports.protect = asyncHandler(async (req, res, next) => {
     );
   }
   const token = req.headers.authorization.split(" ")[1];
+  console.log(token);
   if (!token) {
     throw new MyError("Токен байхгүй байна.", 400);
   }
 
   const tokenObj = jwt.verify(token, process.env.JWT_SECRET);
   req.userId = tokenObj.id;
+  req.role = tokenObj.role;
   next();
 });
+
+exports.authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.role)) {
+      throw new MyError(`Таны эрх [${req.role}] хүрэлцэхгүй байна`, 403);
+    }
+    next();
+  };
+};

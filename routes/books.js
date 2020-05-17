@@ -1,5 +1,5 @@
 const express = require("express");
-const { protect } = require("../middleware/protect");
+const { protect, authorize } = require("../middleware/protect");
 
 const {
   getBooks,
@@ -15,11 +15,16 @@ const {
 const router = express.Router();
 
 // /api/v1/books/
-router.route("/").get(getBooks).post(protect, createBook);
+router
+  .route("/")
+  .get(getBooks)
+  .post(protect, authorize("admin", "operator"), createBook);
 router
   .route("/:id")
   .get(getBook)
-  .put(protect, updateBook)
-  .delete(protect, deleteBook);
-router.route("/:id/photo").put(protect, uploadBookPhoto);
+  .put(protect, authorize("admin", "operator"), updateBook)
+  .delete(protect, authorize("admin", "operator"), deleteBook);
+router
+  .route("/:id/photo")
+  .put(protect, authorize("admin", "operator"), uploadBookPhoto);
 module.exports = router;
