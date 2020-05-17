@@ -1,0 +1,30 @@
+[
+  {
+    "role": "admin",
+    "_id": "5ec12fe6c5d23276bd69fa35",
+    "name": "Admin",
+    "email": "admin@me.com",
+    "password": "admin@me.com"
+  },
+  {
+    "role": "operator",
+    "_id": "5ec12fe6c5d23276bd69fa36",
+    "name": "Operator",
+    "email": "operator@me.com",
+    "password": "operator@me.com"
+  },
+  {
+    "role": "user",
+    "_id": "5ec12fe6c5d23276bd69fa37",
+    "name": "user",
+    "email": "user@me.com",
+    "password": "user@me.com"
+  },
+  {
+    "role": "user",
+    "_id": "5ec12fe6c5d23276bd69fa38",
+    "name": "test",
+    "email": "test@me.com",
+    "password": "test@me.com"
+  }
+]
