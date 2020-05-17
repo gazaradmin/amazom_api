@@ -38,3 +38,81 @@ exports.login = asyncHandler(async (req, res, next) => {
     user: user,
   });
 });
+
+exports.getUsers = asyncHandler(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const select = req.query.select;
+  const sort = req.query.sort;
+  // req.query.select-s select -g ustgaj bn
+  console.log(req.query, sort, select);
+  ["select", "sort", "page", "limit"].forEach((el) => delete req.query[el]);
+
+  // Pagination
+  const pagination = await paginate(page, limit, User);
+
+  // find() function нь утга дамжуулахгүй бол бүх утгыг өгнө.
+  const users = await User.find(req.query, select)
+    .sort(sort)
+    .skip(pagination.start - 1)
+    .limit(limit);
+
+  res.status(200).json({
+    success: true,
+    data: users,
+    pagination,
+  });
+});
+
+exports.getUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    // Өөрийн гэсэн алдаа цацаж байна.
+    throw new MyError(req.params.id + " id -тай хэрэглэгч байхгүй!. ", 400);
+  }
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+exports.createUser = asyncHandler(async (req, res, next) => {
+  const user = await User.create(req.body);
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+exports.updateUser = asyncHandler(async (req, res, next) => {
+  // new:true гэвэл хэрхэн яаж update хийгдсэн бэ гэдэг нь харагдана. runValidators нь Model дээр бичсэн шалгалтуудыг шалгаарай гэж хэлж байна.
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!user) {
+    throw new MyError(req.params.id + " id -тай хэрэглэгч байхгүй. ", 400);
+  }
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+exports.deleteUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    throw new MyError(req.params.id + " id -тай  хэрэглэгч байхгүй. ", 400);
+  }
+
+  user.remove();
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
