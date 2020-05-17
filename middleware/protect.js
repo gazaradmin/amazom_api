@@ -4,10 +4,9 @@ const MyError = require("../utils/MyError");
 const User = require("../models/User");
 
 exports.protect = asyncHandler(async (req, res, next) => {
-  console.log("req.head===> ", req.headers);
   if (!req.headers.authorization) {
     throw new MyError(
-      "Энэ үйлдлийг  хийхэд таны эрх хүрэхгүй байна. Та эхлээд логин хийнэ үү?",
+      "Энэ үйлдлийг  хийхэд таны эрх хүрэхгүй байна. Та эхлээд логин хийнэ үү?. Authorization header ээ шалгана уу!",
       401
     );
   }

@@ -35,6 +35,38 @@ exports.getBooks = asyncHandler(async (req, res, next) => {
   });
 });
 
+// operator
+exports.getUserBooks = asyncHandler(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const select = req.query.select;
+  const sort = req.query.sort;
+  // req.query.select-s select -g ustgaj bn
+  // console.log(req.query, sort, select);
+  ["select", "sort", "page", "limit"].forEach((el) => delete req.query[el]);
+
+  // Pagination
+  const pagination = await paginate(page, limit, Book);
+
+  req.query.createUser = req.userId;
+  console.log(req.query);
+
+  const books = await Book.find(req.query, select)
+    .populate({
+      path: "category",
+      select: "name averagePrice",
+    })
+    .sort(sort)
+    .skip(pagination.start - 1)
+    .limit(limit);
+  res.status(200).json({
+    success: true,
+    count: books.length,
+    data: books,
+    pagination,
+  });
+});
+
 // api/v1/categories/:catid/books
 exports.getCategoryBooks = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
