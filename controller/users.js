@@ -3,6 +3,7 @@ const MyError = require("../utils/MyError");
 const paginate = require("../utils/paginate");
 const asyncHandler = require("../middleware/asyncHandler");
 const sendEmail = require("../utils/email");
+const crypto = require("crypto");
 
 // register
 exports.register = asyncHandler(async (req, res, next) => {
@@ -121,13 +122,46 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const info = await sendEmail({
     email: user.email,
     subject: "Нууц үг өөрчлөх хүсэлт",
-    message: "",
+    message,
   });
   console.log("Message sent: %s", info.messageId);
 
   res.status(200).json({
     success: true,
     resetToken,
+  });
+});
+
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  if (!req.body.resetToken || !req.body.password) {
+    throw new MyError("Та токен болон нууц үгээ дамжуулна уу?", 400);
+  }
+
+  const encrypted = crypto
+    .createHash("sha256")
+    .update(req.body.resetToken)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: encrypted,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+  if (!user) {
+    throw new MyError(" Хүчингүй токен байна!. ", 400);
+  }
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  const token = user.getJsonWebToken();
+
+  res.status(200).json({
+    success: true,
+    token,
+    user,
   });
 });
 
