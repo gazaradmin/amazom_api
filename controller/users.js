@@ -2,6 +2,7 @@ const User = require("../models/User");
 const MyError = require("../utils/MyError");
 const paginate = require("../utils/paginate");
 const asyncHandler = require("../middleware/asyncHandler");
+const sendEmail = require("../utils/email");
 
 // register
 exports.register = asyncHandler(async (req, res, next) => {
@@ -113,8 +114,16 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const resetToken = user.generatePasswordChangeToken();
   // await user.save({ validateBeforeSave: false });
   await user.save();
+  const link = `https://amazon.mn/resetpassword/${resetToken}`;
+  const message = `Сайн байна уу <br><br> Та нууц үгээ солих хүсэлт илгээлээ. Нууц үгээ доорх линк дээр дарэ солино уу: <br><br><a href="${link}">"${link}</a><br><br> Өдрийг сайхан өнгөрүүлээрэй.`;
 
   // send email
+  const info = await sendEmail({
+    email: user.email,
+    subject: "Нууц үг өөрчлөх хүсэлт",
+    message: "",
+  });
+  console.log("Message sent: %s", info.messageId);
 
   res.status(200).json({
     success: true,
