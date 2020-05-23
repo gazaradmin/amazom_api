@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const path = require("path");
 const morgan = require("morgan");
+const cors = require("cors");
 var rfs = require("rotating-file-stream"); // version 2.x
 const logger = require("./middleware/logger");
 const connectDB = require("./config/db");
@@ -24,9 +25,20 @@ var accessLogStream = rfs.createStream("access.log", {
   path: path.join(__dirname, "log"),
 });
 
+var whitelist = ["http://localhost:3000"];
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
 // Body parser хийнэ. request-ээр орж ирж байгаа утгуудыг хүлээж авдаг.
 app.use(express.json());
-
+app.use(cors(corsOptions));
 // file upload
 app.use(fileUpload());
 
